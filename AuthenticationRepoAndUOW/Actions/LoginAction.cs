@@ -28,7 +28,7 @@ namespace UserRepoAndUOW.Actions
 		public OperationResult ValidateUser(Login loginModel)
 		{
 			//Let's check to see that this login object is valid
-			var isUserValid = _processorAction.ValidateEmailAddressAndPassword(loginModel.Username, loginModel.Password);
+			var isUserValid = _processorAction.ValidateUsernameAndPassword(loginModel.Username, loginModel.Password);
 
 			//If this is valid, we'll go ahead and return a successful result
 			if (isUserValid)

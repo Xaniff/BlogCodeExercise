@@ -11,12 +11,11 @@ namespace DataLayer
 	{
 		static BaseContext()
 		{
-			System.Data.Entity.Database.SetInitializer<TContext>(null);
+			Database.SetInitializer<TContext>(null);
 		}
 
 		protected BaseContext() : base("DatabaseConnectionString")
 		{
-			
 		} 
 	}
 }

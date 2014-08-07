@@ -1,0 +1,50 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ui-sref="root.home">
+				My Blog Platform
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="nav-link" ng-show="authenticated" style="background-clor:#3B35A3">
+					<a ui-sref="root.home" style="color:#fff">Cancel Post</a>
+				</li>
+				<li class="nav-link" ng-show="authenticated" style="background-color:#25AD4E">
+					<a ui-sref="root.logout" style="color:#fff">Sign Out</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="wrapper">
+	<div class="row">
+		<div class="container">
+			<div class="col-xs-12">
+				<form name="container.postForm" role="form" novalidate>
+					<div class="form-group">
+						<label for="title">Title:</label>
+						<input id="title" name="title" type="text" ng-maxlength="100" ng-model="post.title" style="width:100%" ng-disabled="isProcessing" required/>
+						<div ng-show="container.postForm.title.$dirty && container.postForm.title.$invalid">
+							<span class="text-warning" ng-show="container.postForm.$error.required">
+								This field is required
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<div text-angular="text-angular" name="htmlcontent" ng-model="post.message"></div>
+					</div>
+					<div class="form-group">
+						<button ng-disabled="isProcessing" ng-show="!isProcessing" ng-click="createPost(post)" class="btn btn-primary">Create Post</button>
+						<button ng-disabled="!isProcessing" ng-show="isProcessing" class="btn btn-primary"><i class="fa fa-spin fa-spinner fa-fw"></i>Creating Post...</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

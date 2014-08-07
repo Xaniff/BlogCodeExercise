@@ -1,21 +1,658 @@
 ﻿@{
-    ViewBag.Title = "Whit's Blog Platform";
+    ViewBag.Title = "Whit Waldo's Blog Platform";
 }
 <!DOCTYPE html>
 <html lang="en-US" ng-app="blog">
 	<head>
 		<meta charset="utf-8"/>
+		<meta http-equiv="X-UI-Compatible" content="IE=edge;chrome=1"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<meta name="keywords" content=""/>
 		<meta name="description" content=""/>
-		<title ng-bind="title + ' | Blog Platform'"></title>
+		<title ng-bind="title + ' | Whit Waldo\'s Blog Platform'"></title>
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		@Styles.Render("~/Content/css")
 		@Styles.Render("~/Content/less-style")
 		@Scripts.Render("~/bundles/standard")
+		@*<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>*@
 	</head>
 	<body controller="ApplicationController">
-		<div ui-view autoscroll=""></div>
+		<div ui-view autoscroll=""><!-- uiView:  --><div ui-view="" class="ng-scope"><div class="navbar navbar-inverse navbar-fixed-top ng-scope" style="margin-bottom:50px">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ui-sref="root.home({id: null})" href="/">
+				Whit Waldo's Blog Platform
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<form name="container.loginForm" ng-show="!authenticated" class="form-inline hidden-xs ng-pristine ng-invalid ng-invalid-required ng-hide" role="form" novalidate="">
+					<div class="form-group">
+						<input id="username" name="username" type="text" ng-model="user.username" placeholder="username" ng-disabled="isProcessingLogin" required="" class="ng-pristine ng-invalid ng-invalid-required">
+						<div ng-show="container.loginForm.username.$dirty &amp;&amp; container.loginForm.username.$invalid" class="ng-hide">
+							<span class="text-warning" ng-show="container.loginForm.$error.required">Required</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<input id="password" name="password" type="password" ng-model="user.password" placeholder="password" class="ng-pristine ng-valid">
+						<div ng-show="container.loginForm.password.$dirty &amp;&amp; container.loginForm.password.$invalid" class="ng-hide">
+							<span class="text-warning" ng-show="container.loginForm.$error.required">Required</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<button ng-disabled="isProcessingAuthentication" ng-show="!isProcessingLogin" ng-click="loginClick(user)" class="btn btn-warning btn-xs navbar-btn">Sign In</button>
+						<button ng-disabled="isProcessingAuthentication" ng-show="isProcessingLogin" class="btn btn-warning btn-xs navbar-btn ng-hide"><i class="fa fa-spinner fa-spin fa-fw"></i>Signing in...</button>
+						<span class="text-warning ng-binding ng-hide" ng-show="loginError.length > 0" ng-bind="loginError"></span>
+					</div>
+				</form>
+				<li class="nav-link visible-xs hidden-sm hidden-md hidden-lg ng-hide" ng-show="!authenticated">
+					<a ui-sref="root.login" href="/login"><i class="fa fa-sign-in fa-fw"></i>Log in</a> <!-- this link doesn't work, but is here to show how it could -->
+				</li>
+				<li class="nav-link visible-xs hidden-sm hidden-md hidden-lg ng-hide" ng-show="!authenticated">
+					<a ui-sref="root.register" href="/register"><i class="fa fa-users fa-fw"></i>Register</a> <!-- this link doesn't work, but is here to show how it could -->
+				</li>
+				<!--<li class="nav-link" ng-show="authenticated" style="background-color:#EA9732">
+					<p style="padding:10px 15px;margin:0">Hello {{showUsername}}!</p>
+				</li>-->
+				<li class="nav-link" ng-show="authenticated" style="background-color:#276C95">
+					<a ui-sref="root.newPost" style="color:#FFF" href="/new"><i class="fa fa-plus fa-fw"></i>New Post</a>
+				</li>
+				<li class="nav-link" ng-show="authenticated" style="background-color:#25AD4E">
+					<a ui-sref="root.logout" style="color:#FFF" href="/logout"><i class="fa fa-sign-out fa-fw"></i>Sign Out</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="wrapper ng-scope">
+	<div class="row">
+		<div class="container">
+			<div class="col-sm-9 ng-hide" ng-show="!loadedPosts">
+				<h2 class="text-center">Retrieving posts...</h2>
+			</div>
+			<div class="col-sm-9 hidden-xs" ng-show="loadedPosts">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ng-hide" ng-show="loadedPosts &amp;&amp; posts.length == 0 &amp;&amp; authors.length > 0">
+					<h2 class="text-center">This author hasn't written anything!</h2>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ng-hide" ng-show="loadedPosts &amp;&amp; posts.length == 0 &amp;&amp; authors.length == 0 &amp;&amp; authorId == null">
+					<h2 class="text-center">No posts here! You should register and post something!</h2>
+				</div>
+				<!-- Large view -->
+				<!-- ngRepeat: post in posts --><div id="largeBlogItem0" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="7" title="Hamburger" body="Bacon ipsum dolor sit amet beef ribs short loin chuck capicola. Sausage kevin tri-tip" author="Peter" date="2014-08-07T09:14:27.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(169, 8, 23);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=7"><h2 class="title ng-binding" ng-bind="title">Hamburger</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet beef ribs short loin chuck capicola. Sausage kevin tri-tip</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="largeBlogItem1" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="4" title="Short Ribs!" body="Bacon ipsum dolor sit amet shankle frankfurter jerky tongue, jowl turducken biltong s" author="Robert" date="2014-08-07T09:10:34.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(86, 144, 178);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=4"><h2 class="title ng-binding" ng-bind="title">Short Ribs!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet shankle frankfurter jerky tongue, jowl turducken biltong s</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="largeBlogItem2" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="6" title="Sirloin" body="Short ribs capicola meatball, ham ham hock shank short loin tongue andouille. Rump ki" author="Whit" date="2014-08-07T06:12:45.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(86, 144, 178);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=6"><h2 class="title ng-binding" ng-bind="title">Sirloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Whit</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Short ribs capicola meatball, ham ham hock shank short loin tongue andouille. Rump ki</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="largeBlogItem3" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="3" title="Pork Tenderloin" body="Bacon ipsum dolor sit amet leberkas boudin ground round frankfurter. Exercitation sha" author="Bill" date="2014-08-06T15:13:10.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(5, 107, 100);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=3"><h2 class="title ng-binding" ng-bind="title">Pork Tenderloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Bill</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet leberkas boudin ground round frankfurter. Exercitation sha</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="largeBlogItem4" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="2" title="Tenderloin!" body="Shankle tenderloin doner strip steak, ham rump sirloin venison frankfurter. Biltong p" author="Peter" date="2014-08-06T14:53:59.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(169, 8, 23);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=2"><h2 class="title ng-binding" ng-bind="title">Tenderloin!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Shankle tenderloin doner strip steak, ham rump sirloin venison frankfurter. Biltong p</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="largeBlogItem5" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="1" title="Pork Chops!" body="Pork chop swine pork belly flank ham tri-tip kielbasa shoulder, turducken pancetta ri" author="Peter" date="2014-08-06T14:53:46.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(86, 144, 178);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=1"><h2 class="title ng-binding" ng-bind="title">Pork Chops!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Pork chop swine pork belly flank ham tri-tip kielbasa shoulder, turducken pancetta ri</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="largeBlogItem6" class="col-lg-6 hidden-md hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 300px;;height: 300px;" id="5" title="Pastrami" body="Tenderloin andouille pastrami pork chop pork loin pork belly swine beef ribs strip st" author="Robert" date="2014-08-06T09:12:02.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(5, 118, 76);">
+		<div class="largeItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=5"><h2 class="title ng-binding" ng-bind="title">Pastrami</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Tenderloin andouille pastrami pork chop pork loin pork belly swine beef ribs strip st</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts -->
+				
+				<!-- Medium view -->
+				<!-- ngRepeat: post in posts --><div id="medBlogItem0" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="7" title="Hamburger" body="Bacon ipsum dolor sit amet beef ribs short loin chuck capico" author="Peter" date="2014-08-07T09:14:27.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(56, 186, 104);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=7"><h2 class="title ng-binding" ng-bind="title">Hamburger</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet beef ribs short loin chuck capico</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="medBlogItem1" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="4" title="Short Ribs!" body="Bacon ipsum dolor sit amet shankle frankfurter jerky tongue," author="Robert" date="2014-08-07T09:10:34.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(175, 80, 8);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=4"><h2 class="title ng-binding" ng-bind="title">Short Ribs!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet shankle frankfurter jerky tongue,</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="medBlogItem2" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="6" title="Sirloin" body="Short ribs capicola meatball, ham ham hock shank short loin " author="Whit" date="2014-08-07T06:12:45.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(201, 61, 146);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=6"><h2 class="title ng-binding" ng-bind="title">Sirloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Whit</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Short ribs capicola meatball, ham ham hock shank short loin </p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="medBlogItem3" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="3" title="Pork Tenderloin" body="Bacon ipsum dolor sit amet leberkas boudin ground round fran" author="Bill" date="2014-08-06T15:13:10.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(56, 186, 104);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=3"><h2 class="title ng-binding" ng-bind="title">Pork Tenderloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Bill</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet leberkas boudin ground round fran</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="medBlogItem4" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="2" title="Tenderloin!" body="Shankle tenderloin doner strip steak, ham rump sirloin venis" author="Peter" date="2014-08-06T14:53:59.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(99, 8, 115);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=2"><h2 class="title ng-binding" ng-bind="title">Tenderloin!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Shankle tenderloin doner strip steak, ham rump sirloin venis</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="medBlogItem5" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="1" title="Pork Chops!" body="Pork chop swine pork belly flank ham tri-tip kielbasa should" author="Peter" date="2014-08-06T14:53:46.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(18, 45, 118);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=1"><h2 class="title ng-binding" ng-bind="title">Pork Chops!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Pork chop swine pork belly flank ham tri-tip kielbasa should</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="medBlogItem6" class="col-md-6 hidden-lg hidden-sm hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 200px;height: 200px" id="5" title="Pastrami" body="Tenderloin andouille pastrami pork chop pork loin pork belly" author="Robert" date="2014-08-06T09:12:02.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(18, 45, 118);">
+		<div class="mediumItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=5"><h2 class="title ng-binding" ng-bind="title">Pastrami</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Tenderloin andouille pastrami pork chop pork loin pork belly</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts -->
+
+				<!-- Small view -->
+				<!-- ngRepeat: post in posts --><div id="smallBlogItem0" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="7" title="Hamburger" body="Bacon ipsum dolor sit amet beef ribs short loin ch" author="Peter" date="2014-08-07T09:14:27.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(107, 102, 191);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=7"><h2 class="title ng-binding" ng-bind="title">Hamburger</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet beef ribs short loin ch</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="smallBlogItem1" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="4" title="Short Ribs!" body="Bacon ipsum dolor sit amet shankle frankfurter jer" author="Robert" date="2014-08-07T09:10:34.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(169, 8, 23);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=4"><h2 class="title ng-binding" ng-bind="title">Short Ribs!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet shankle frankfurter jer</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="smallBlogItem2" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="6" title="Sirloin" body="Short ribs capicola meatball, ham ham hock shank s" author="Whit" date="2014-08-07T06:12:45.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(11, 74, 111);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=6"><h2 class="title ng-binding" ng-bind="title">Sirloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Whit</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Short ribs capicola meatball, ham ham hock shank s</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="smallBlogItem3" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="3" title="Pork Tenderl" body="Bacon ipsum dolor sit amet leberkas boudin ground " author="Bill" date="2014-08-06T15:13:10.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(236, 71, 106);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=3"><h2 class="title ng-binding" ng-bind="title">Pork Tenderl</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Bill</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet leberkas boudin ground </p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="smallBlogItem4" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="2" title="Tenderloin!" body="Shankle tenderloin doner strip steak, ham rump sir" author="Peter" date="2014-08-06T14:53:59.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(99, 8, 115);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=2"><h2 class="title ng-binding" ng-bind="title">Tenderloin!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Shankle tenderloin doner strip steak, ham rump sir</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="smallBlogItem5" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="1" title="Pork Chops!" body="Pork chop swine pork belly flank ham tri-tip kielb" author="Peter" date="2014-08-06T14:53:46.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(91, 70, 0);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=1"><h2 class="title ng-binding" ng-bind="title">Pork Chops!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Pork chop swine pork belly flank ham tri-tip kielb</p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts --><div id="smallBlogItem6" class="col-sm-6 hidden-lg hidden-md hidden-xs ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<div style="height: 130px;;height: 130px;" id="5" title="Pastrami" body="Tenderloin andouille pastrami pork chop pork loin " author="Robert" date="2014-08-06T09:12:02.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(99, 8, 115);">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=5"><h2 class="title ng-binding" ng-bind="title">Pastrami</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Tenderloin andouille pastrami pork chop pork loin </p>
+			</div>
+		</div>
+	</div>
+</div>
+				</div><!-- end ngRepeat: post in posts -->
+			</div>
+			<div class="col-sm-3 hidden-xs">
+				<div class="row ng-hide" ng-show="!authenticated">
+					<h2 class="section-title">Register Account</h2>
+					<form name="container.registrationForm" style="margin-bottom:30px;" role="form" novalidate="" class="ng-dirty ng-invalid ng-invalid-required">
+						<div class="form-group">
+							<label for="username">Username</label>
+							<input id="username" name="username" type="text" ng-model="register.username" style="width:100%" ng-disabled="isProcessingAuthentication" required="" class="ng-dirty ng-invalid ng-invalid-required">
+							<div ng-show="container.registrationForm.username.$dirty &amp;&amp; container.registrationForm.username.$invalid" class="">
+								<span class="text-warning" ng-show="container.registrationForm.$error.required">Required</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input id="password" name="password" type="password" ng-model="register.password" style="width:100%" ng-disabled="isProcessingAuthentication" required="" class="ng-dirty ng-invalid ng-invalid-required">
+							<div ng-show="container.registrationForm.password.$dirty &amp;&amp; container.registrationForm.password.$invalid" class="">
+								<span class="text-warning" ng-show="container.registrationForm.$error.required">Required</span>
+							</div>
+							<span class="text-danger ng-binding ng-hide" ng-show="registrationError.length > 0" ng-bind="registrationError"></span>
+						</div>
+						<div class="form-group">
+							<div class=" col-sm-6 col-sm-offset-7">
+								<button ng-disabled="isProcessingAuthentication" ng-show="!isProcessingRegistration" ng-click="registerClick(register)" class="btn btn-primary" style="width:100%">Sign Up!</button>
+								<button ng-disabled="isProcessingAuthentication" ng-show="isProcessingRegistration" class="btn btn-primary ng-hide"><i class="fa fa-spinner fa-spin fa-fw"></i>Signing up...</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="row">
+					<h2 class="section-title">Keep in Touch</h2>
+					<a style="margin:2px;margin-bottom:10px;color:#000" target="_blank" href="/rss/posts">
+						<img src="/Content/img/rss.png" style="margin-right:5px;width:24px;height:24px">RSS Feed
+					</a>
+				</div>
+				<div class="row" ng-show="authors.length > 0">
+					<h2 class="section-title">Filter By Author</h2>
+					<a class="btn btn-info" style="width:100%;margin:2px;margin-bottom:10px;" ui-sref="root.home({id: null})" href="/">See All Authors</a>
+					<!-- ngRepeat: author in authors --><div id="allAuthors0" ng-repeat="author in authors" class="ng-scope">
+						<a class="btn btn-default ng-binding" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;" href="/?id=2">Bill - 1 posts</a>
+					</div><!-- end ngRepeat: author in authors --><div id="allAuthors1" ng-repeat="author in authors" class="ng-scope">
+						<a class="btn btn-default ng-binding" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;" href="/?id=3">Fred - 0 posts</a>
+					</div><!-- end ngRepeat: author in authors --><div id="allAuthors2" ng-repeat="author in authors" class="ng-scope">
+						<a class="btn btn-default ng-binding" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;" href="/?id=6">John - 0 posts</a>
+					</div><!-- end ngRepeat: author in authors --><div id="allAuthors3" ng-repeat="author in authors" class="ng-scope">
+						<a class="btn btn-default ng-binding" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;" href="/?id=4">Peter - 3 posts</a>
+					</div><!-- end ngRepeat: author in authors --><div id="allAuthors4" ng-repeat="author in authors" class="ng-scope">
+						<a class="btn btn-default ng-binding" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;" href="/?id=5">Robert - 2 posts</a>
+					</div><!-- end ngRepeat: author in authors --><div id="allAuthors5" ng-repeat="author in authors" class="ng-scope">
+						<a class="btn btn-default ng-binding" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;" href="/?id=1">Whit - 1 posts</a>
+					</div><!-- end ngRepeat: author in authors -->
+				</div>
+				<div class="row recentComments" ng-show="recentComments.length > 0">
+					<h2 class="section-title">Recent Comments</h2>
+					<!-- ngRepeat: comment in recentComments | limitTo: 5 --><div id="recentComments0" ng-repeat="comment in recentComments | limitTo: 5" class="ng-scope">
+						<a style="font-weight:bold" ui-sref="root.viewPost({id: comment.postId})" class="ng-binding" href="/view?id=6">Sirloin</a>
+						<br>
+						<span>
+							<a ui-sref="root.home({id: comment.authorId})" class="ng-binding" href="/?id=5">Robert</a>
+							<p ng-bind="(comment.date | date: 'mediumDate')" class="ng-binding">Aug 7, 2014</p>
+						</span>
+						<div class="clearfix"></div>
+						<p class="ng-binding">I love short ribs!...</p>
+					</div><!-- end ngRepeat: comment in recentComments | limitTo: 5 --><div id="recentComments1" ng-repeat="comment in recentComments | limitTo: 5" class="ng-scope">
+						<a style="font-weight:bold" ui-sref="root.viewPost({id: comment.postId})" class="ng-binding" href="/view?id=3">Pork Tenderloin</a>
+						<br>
+						<span>
+							<a ui-sref="root.home({id: comment.authorId})" class="ng-binding" href="/?id=2">Bill</a>
+							<p ng-bind="(comment.date | date: 'mediumDate')" class="ng-binding">Aug 7, 2014</p>
+						</span>
+						<div class="clearfix"></div>
+						<p class="ng-binding">The bigger question is wh...</p>
+					</div><!-- end ngRepeat: comment in recentComments | limitTo: 5 --><div id="recentComments2" ng-repeat="comment in recentComments | limitTo: 5" class="ng-scope">
+						<a style="font-weight:bold" ui-sref="root.viewPost({id: comment.postId})" class="ng-binding" href="/view?id=3">Pork Tenderloin</a>
+						<br>
+						<span>
+							<a ui-sref="root.home({id: comment.authorId})" class="ng-binding" href="/?id=1">Whit</a>
+							<p ng-bind="(comment.date | date: 'mediumDate')" class="ng-binding">Aug 6, 2014</p>
+						</span>
+						<div class="clearfix"></div>
+						<p class="ng-binding">Man, I would really enjoy...</p>
+					</div><!-- end ngRepeat: comment in recentComments | limitTo: 5 -->
+				</div>
+			</div>
+			<!-- ngRepeat: post in posts --><div id="xsBlogItem0" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="7" title="Hamburger" body="Bacon ipsum dolor sit amet beef ribs short loin chuck capico" author="Peter" date="2014-08-07T09:14:27.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(91, 28, 0);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=7"><h2 class="title ng-binding" ng-bind="title">Hamburger</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet beef ribs short loin chuck capico</p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts --><div id="xsBlogItem1" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="4" title="Short Ribs!" body="Bacon ipsum dolor sit amet shankle frankfurter jerky tongue," author="Robert" date="2014-08-07T09:10:34.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(90, 198, 127);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=4"><h2 class="title ng-binding" ng-bind="title">Short Ribs!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet shankle frankfurter jerky tongue,</p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts --><div id="xsBlogItem2" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="6" title="Sirloin" body="Short ribs capicola meatball, ham ham hock shank short loin " author="Whit" date="2014-08-07T06:12:45.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(72, 88, 0);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=6"><h2 class="title ng-binding" ng-bind="title">Sirloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Whit</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 7, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Short ribs capicola meatball, ham ham hock shank short loin </p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts --><div id="xsBlogItem3" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="3" title="Pork Tenderloin" body="Bacon ipsum dolor sit amet leberkas boudin ground round fran" author="Bill" date="2014-08-06T15:13:10.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(255, 193, 116);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=3"><h2 class="title ng-binding" ng-bind="title">Pork Tenderloin</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Bill</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Bacon ipsum dolor sit amet leberkas boudin ground round fran</p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts --><div id="xsBlogItem4" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="2" title="Tenderloin!" body="Shankle tenderloin doner strip steak, ham rump sirloin venis" author="Peter" date="2014-08-06T14:53:59.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(230, 69, 115);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=2"><h2 class="title ng-binding" ng-bind="title">Tenderloin!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Shankle tenderloin doner strip steak, ham rump sirloin venis</p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts --><div id="xsBlogItem5" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="1" title="Pork Chops!" body="Pork chop swine pork belly flank ham tri-tip kielbasa should" author="Peter" date="2014-08-06T14:53:46.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(125, 6, 103);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=1"><h2 class="title ng-binding" ng-bind="title">Pork Chops!</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Peter</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Pork chop swine pork belly flank ham tri-tip kielbasa should</p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts --><div id="xsBlogItem6" class="col-xs-12 hidden-lg hidden-md hidden-sm ng-scope" ng-show="loadedPosts &amp;&amp; posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<div style="height: 140px;;height: 140px;" id="5" title="Pastrami" body="Tenderloin andouille pastrami pork chop pork loin pork belly" author="Robert" date="2014-08-06T09:12:02.0000000" class="ng-isolate-scope">
+	<div class="blogItem fadeIn" ng-style="style" ng-click="clickPanel()" style="background-color: rgb(236, 71, 106);">
+		<div class="xsmallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})" href="/view?id=5"><h2 class="title ng-binding" ng-bind="title">Pastrami</h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author ng-binding" ng-bind="author">Robert</h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date ng-binding" ng-bind="(date | date:'mediumDate')">Aug 6, 2014</h6>
+				</span>
+				<p class="body ng-binding" ng-bind="body">Tenderloin andouille pastrami pork chop pork loin pork belly</p>
+			</div>
+		</div>
+	</div>
+</div>
+			</div><!-- end ngRepeat: post in posts -->
+		</div>
+	</div>
+</div></div></div>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 		@Scripts.Render("~/bundles/signalR")
 		<script src="signalr/hubs"></script>
@@ -28,7 +665,7 @@
 		@Scripts.Render("~/bundles/bootstrap")
 		@*@if (HttpContext.Current.IsDebuggingEnabled) Edited out since the minification scripts aren't set up
 		{*@
-			@Scripts.Render("~/bundles/blogDebug")
+		@Scripts.Render("~/bundles/blogDebug")
 		@*}
 		else
 		{

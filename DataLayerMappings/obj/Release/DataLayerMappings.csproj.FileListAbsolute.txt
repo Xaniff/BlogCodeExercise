@@ -1,0 +1,14 @@
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\DataLayerMappings.dll.config
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\DataLayerMappings.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\DataLayerMappings.pdb
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\DomainClasses.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\EntityFramework.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\Newtonsoft.Json.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\DomainClasses.pdb
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\EntityFramework.xml
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Release\Newtonsoft.Json.xml
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\obj\Release\DataLayerMappings.csprojResolveAssemblyReference.cache
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\obj\Release\DataLayerMappings.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\obj\Release\DataLayerMappings.pdb

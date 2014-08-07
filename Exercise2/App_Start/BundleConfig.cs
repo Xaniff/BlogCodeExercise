@@ -46,7 +46,7 @@ namespace Exercise2
 
 			var lessBundle = new Bundle("~/Content/less-style").IncludeDirectory("~/Content/LESS/", "*.less");
 			lessBundle.Transforms.Add(new LessTransform());
-			lessBundle.Transforms.Add(new CssMinify());
+			//lessBundle.Transforms.Add(new CssMinify());
 			bundles.Add(lessBundle);
 
 			#endregion

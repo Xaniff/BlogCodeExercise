@@ -21,6 +21,8 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,9 +61,9 @@
       <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\Documents\Visual Studio 2013\Projects\Hurread\HurreadSite\EmailTemplater\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -189,16 +191,21 @@
     <Compile Include="App_Start\LessTransform.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\UpdateHub.cs" />
+    <Compile Include="App_Start\SignalRHub.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BlogInitializer.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\AuthenticationApiController.cs" />
     <Compile Include="Controllers\API\PostApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RssController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201408070541580_Initial.cs" />
+    <Compile Include="Migrations\201408070541580_Initial.Designer.cs">
+      <DependentUpon>201408070541580_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -211,6 +218,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\img\rss.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -234,18 +242,20 @@
     <Content Include="Scripts\blog\controllers\root\registerCtrl.js" />
     <Content Include="Scripts\blog\controllers\root\viewPostCtrl.js" />
     <Content Include="Scripts\blog\directives\blogListItem.js" />
+    <Content Include="Scripts\blog\directives\commentItem.js" />
     <Content Include="Scripts\blog\directives\largeBlogItem.js" />
     <Content Include="Scripts\blog\directives\mediumBlogItem.js" />
     <Content Include="Scripts\blog\directives\recentBlogItem.js" />
     <Content Include="Scripts\blog\directives\recentCommentItem.js" />
     <Content Include="Scripts\blog\directives\smallBlogItem.js" />
     <Content Include="Scripts\blog\directives\xSmallBlogItem.js" />
+    <Content Include="Scripts\blog\filters\countItemFilter.js" />
     <Content Include="Scripts\blog\services\commentRepositoryService.js" />
     <Content Include="Scripts\blog\services\postRepositoryService.js" />
     <Content Include="Scripts\blog\services\randomFactory.js" />
-    <Content Include="Scripts\blog\templates\byAuthor.html" />
-    <Content Include="Scripts\blog\templates\byDate.html" />
+    <Content Include="Scripts\blog\services\signalRService.js" />
     <Content Include="Scripts\blog\templates\directives\blogListItem.html" />
+    <Content Include="Scripts\blog\templates\directives\commentItem.html" />
     <Content Include="Scripts\blog\templates\directives\largeBlogItem.html" />
     <Content Include="Scripts\blog\templates\directives\mediumBlogItem.html" />
     <Content Include="Scripts\blog\templates\directives\recentBlogItem.html" />
@@ -256,7 +266,6 @@
     <Content Include="Scripts\blog\templates\home.html" />
     <Content Include="Scripts\blog\templates\login.html" />
     <Content Include="Scripts\blog\templates\newPost.html" />
-    <Content Include="Scripts\blog\templates\post.html" />
     <Content Include="Scripts\blog\templates\register.html" />
     <Content Include="Scripts\blog\templates\root.html" />
     <Content Include="Scripts\blog\templates\viewPost.html" />
@@ -292,7 +301,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\blog\filters\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Scripts\blog\partials\" />
     <Folder Include="Scripts\blog\viewmodels\" />
   </ItemGroup>
@@ -301,9 +310,17 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AuthenticationBoundedContext\UserBoundedContext.csproj">
+      <Project>{D9369408-BE90-421C-9DD5-3397BB1A4140}</Project>
+      <Name>UserBoundedContext</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AuthenticationRepoAndUOW\UserRepoAndUOW.csproj">
       <Project>{4E1C432B-10E1-456A-858A-362F96A1D14B}</Project>
       <Name>UserRepoAndUOW</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlogBoundedContext\BlogBoundedContext.csproj">
+      <Project>{16B8DCA9-477E-4A6F-97C5-458E16E3EC5F}</Project>
+      <Name>BlogBoundedContext</Name>
     </ProjectReference>
     <ProjectReference Include="..\BlogRepoAndUOW\BlogRepoAndUOW.csproj">
       <Project>{1B7C611E-5B76-4862-B5A3-95A13FFADEDD}</Project>
@@ -321,6 +338,11 @@
       <Project>{B82454FB-7323-4DE9-A7AD-B903B9040B55}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201408070541580_Initial.resx">
+      <DependentUpon>201408070541580_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -350,6 +372,13 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

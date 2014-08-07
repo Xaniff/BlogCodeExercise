@@ -1,0 +1,137 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:50px">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ui-sref="root.home({id: null})">
+				My Blog Platform
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<form name="container.loginForm" ng-show="!authenticated" class="form-inline hidden-xs" role="form" novalidate>
+					<div class="form-group">
+						<input id="username" name="username" type="text" ng-model="user.username" placeholder="username" ng-disabled="isProcessingLogin" required />
+						<div ng-show="container.loginForm.username.$dirty && container.loginForm.username.$invalid">
+							<span class="text-warning" ng-show="container.loginForm.$error.required">Required</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<input id="password" name="password" type="password" ng-model="user.password" placeholder="password" />
+						<div ng-show="container.loginForm.password.$dirty && container.loginForm.password.$invalid">
+							<span class="text-warning" ng-show="container.loginForm.$error.required">Required</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<button ng-disabled="isProcessingAuthentication" ng-show="!isProcessingLogin" ng-click="loginClick(user)" class="btn btn-warning btn-xs navbar-btn">Sign In</button>
+						<button ng-disabled="isProcessingAuthentication" ng-show="isProcessingLogin" class="btn btn-warning btn-xs navbar-btn"><i class="fa fa-spinner fa-spin fa-fw"></i>Signing in...</button>
+						<span class="text-warning" ng-show="loginError.length > 0" ng-bind="loginError"></span>
+					</div>
+				</form>
+				<li class="nav-link visible-xs hidden-sm hidden-md hidden-lg" ng-show="!authenticated">
+					<a ui-sref="root.login">Log in</a> <!-- this link doesn't work, but is here to show how it could -->
+				</li>
+				<li class="nav-link visible-xs hidden-sm hidden-md hidden-lg" ng-show="!authenticated">
+					<a ui-sref="root.register">Register</a> <!-- this link doesn't work, but is here to show how it could -->
+				</li>
+				<li class="nav-link" ng-show="authenticated" style="background-color:#276C95">
+					<a ui-sref="root.newPost" style="color:#FFF"><i class="fa fa-plus fa-fw"></i>New Post</a>
+				</li>
+				<li class="nav-link" ng-show="authenticated" style="background-color:#25AD4E">
+					<a ui-sref="root.logout" style="color:#FFF">Sign Out</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="wrapper">
+	<div class="row">
+		<div class="container">
+			<div class="col-sm-9" ng-show="!loadedPosts">
+				<h2 class="text-center">Retrieving posts...</h2>
+			</div>
+			<div class="col-sm-9 hidden-xs" ng-show="loadedPosts">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="loadedPosts && posts.length == 0 && authors.length > 0">
+					<h2 class="text-center">This author hasn't written anything!</h2>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="loadedPosts && posts.length == 0 && authors.length == 0">
+					<h2 class="text-center">No posts here! You should register and post something!</h2>
+				</div>
+				<!-- Large view -->
+				<div id="largeBlogItem{{$index}}" class="col-lg-6 hidden-md hidden-sm hidden-xs" ng-show="loadedPosts && posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<large-blog-item id="{{post.id}}" title="{{post.title}}" body="{{post.body | limitTo: 85}}" author="{{post.author}}" date="{{post.date}}"></large-blog-item>
+				</div>
+				
+				<!-- Medium view -->
+				<div id="medBlogItem{{$index}}" class="col-md-6 hidden-lg hidden-sm hidden-xs" ng-show="loadedPosts && posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<medium-blog-item id="{{post.id}}" title="{{post.title | limitTo: 21}}" body="{{post.body | limitTo: 60}}" author="{{post.author}}" date="{{post.date}}"></medium-blog-item>
+				</div>
+
+				<!-- Small view -->
+				<div id="smallBlogItem{{$index}}" class="col-sm-6 hidden-lg hidden-md hidden-xs" ng-show="loadedPosts && posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+					<small-blog-item id="{{post.id}}" title="{{post.title | limitTo: 12}}" body="{{post.body | limitTo: 50}}" author="{{post.author}}" date="{{post.date}}"></small-blog-item>
+				</div>
+			</div>
+			<div class="col-sm-3 hidden-xs">
+				<div class="row" ng-show="!authenticated">
+					<h2 class="section-title">Register Account</h2>
+					<form name="container.registrationForm" style="margin-bottom:30px;" role="form" novalidate>
+						<div class="form-group">
+							<label for="username">Username</label>
+							<input id="username" name="username" type="text" ng-model="register.username" style="width:100%" ng-disabled="isProcessingAuthentication" required />
+							<div ng-show="container.registrationForm.username.$dirty && container.registrationForm.username.$invalid">
+								<span class="text-warning" ng-show="container.registrationForm.$error.required">Required</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input id="password" name="password" type="password" ng-model="register.password" style="width:100%" ng-disabled="isProcessingAuthentication" required />
+							<div ng-show="container.registrationForm.password.$dirty && container.registrationForm.password.$invalid">
+								<span class="text-warning" ng-show="container.registrationForm.$error.required">Required</span>
+							</div>
+							<span class="text-danger" ng-show="registrationError.length > 0" ng-bind="registrationError"></span>
+						</div>
+						<div class="form-group">
+							<div class=" col-sm-6 col-sm-offset-7">
+								<button ng-disabled="isProcessingAuthentication" ng-show="!isProcessingRegistration" ng-click="registerClick(register)" class="btn btn-primary" style="width:100%">Sign Up!</button>
+								<button ng-disabled="isProcessingAuthentication" ng-show="isProcessingRegistration" class="btn btn-primary"><i class="fa fa-spinner fa-spin fa-fw"></i>Signing up...</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="row">
+					<h2 class="section-title">Keep in Touch</h2>
+					<a style="margin:2px;margin-bottom:10px;color:#000" target="_blank" href="/rss/posts">
+						<img src="/Content/img/rss.png" style="margin-right:5px;width:24px;height:24px" />RSS Feed
+					</a>
+				</div>
+				<div class="row" ng-show="authors.length > 0">
+					<h2 class="section-title">Filter By Author</h2>
+					<a class="btn btn-info" style="width:100%;margin:2px;margin-bottom:10px;" ui-sref="root.home({id: null})">See All Authors</a>
+					<div id="allAuthors{{$index}}" ng-repeat="author in authors">
+						<a class="btn btn-default" ui-sref="root.home({id: author.id})" style="width:100%;margin:2px;">{{author.username}} - {{author.postCount}} posts</a>
+					</div>
+				</div>
+				<div class="row recentComments" ng-show="recentComments.length > 0">
+					<h2 class="section-title">Recent Comments</h2>
+					<div id="recentComments{{$index}}" ng-repeat="comment in recentComments">
+						<a style="font-weight:bold" ui-sref="root.view({id: comment.postId})">{{comment.postTitle}}</a>
+						<br/>
+						<span>
+							<a ui-sref="root.home({id: comment.authorId})">{{comment.authorName}}</a>
+							<p ng-bind="{{comment.date | date: 'mediumDate'}}"></p>
+						</span>
+						<div class="clearfix"></div>
+						<p>{{comment.body | limitTo: 20}}</p>
+					</div>
+				</div>
+			</div>
+			<div id="xsBlogItem{{$index}}" class="col-xs-12 hidden-lg hidden-md hidden-sm" ng-show="loadedPosts && posts.length > 0" style="margin-bottom:15px" ng-repeat="post in posts">
+				<xsmall-blog-item id="{{post.id}}" title="{{post.title | limitTo: 16}}" body="{{post.body | limitTo: 60}}" author="{{post.author}}" date="{{post.date}}"></xsmall-blog-item>
+			</div>
+		</div>
+	</div>
+</div>

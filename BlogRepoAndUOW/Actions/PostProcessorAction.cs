@@ -178,7 +178,7 @@ namespace BlogRepoAndUOW.Actions
 			{
 				using (var repo = new PostRepository(uow))
 				{
-					var post = repo.Grab(a => a.Id == postId).Include(a => a.Author).FirstOrDefault();
+					var post = repo.Grab(a => a.Id == postId).Include(a => a.Author).Include(a => a.Comments).FirstOrDefault();
 					return post;
 				}
 			}

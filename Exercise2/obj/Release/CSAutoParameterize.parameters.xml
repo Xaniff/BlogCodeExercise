@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DatabaseConnectionString-Web.config Connection String" description="DatabaseConnectionString Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:spn4ryw52s.database.windows.net,1433;Database=samplebAQZtASJQc;User ID=whit.waldo@spn4ryw52s;Password=ueI1aYDLP6qsIFRCEVjNlg3!xWChPrIXUWjaw5Y6rz_MnoeeA7;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Whit\\Desktop\\hurread2\\Exercise2\\Exercise2\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DatabaseConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="DataLayer.BaseContext`1-Web.config Connection String" description="DataLayer.BaseContext`1 Connection String used in web.config by the application to access the database." defaultValue="DataLayer.BaseContext`1_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Whit\\Desktop\\hurread2\\Exercise2\\Exercise2\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DataLayer.BaseContext`1']/@connectionString" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="DefaultConnection_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Whit\\Desktop\\hurread2\\Exercise2\\Exercise2\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

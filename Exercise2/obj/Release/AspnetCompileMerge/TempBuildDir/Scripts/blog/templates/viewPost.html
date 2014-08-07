@@ -1,0 +1,108 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ui-sref="root.home">
+				My Blog Platform
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="nav-link" style="background-clor:#3B35A3">
+					<a ui-sref="root.home" style="color:#fff">Back to home</a>
+				</li>
+				<li class="nav-link" ng-show="authenticated" style="background-color:#25AD4E">
+					<a ui-sref="root.logout" style="color:#fff">Sign Out</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="wrapper">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-xs-12">
+				<div class="article">
+					<div ng-style="boxColor" style="margin:0">
+						<h1 class="article-title" ng-bind="post.title"></h1>
+					</div>
+					<span>
+						<i class="fa fa-pencil fa-fw"></i>
+						<h6 class="author" ng-bind="post.author"></h6>
+						<i class="fa fa-clock-o fa-fw"></i>
+						<h6 class="date" ng-bind="(post.date | date: 'mediumDate')"></h6>
+					</span>
+					<br/>
+					<span ng-show="post.author == username">
+						<button ng-click="editPost(postId)" class="btn btn-warning">Edit Post</button>
+						<button ng-click="deletePost(postId)" class="btn btn-danger">Delete Post</button>
+					</span>
+					<br/>
+					<!-- The following is used for the Google +1 button -->
+					<div class="g-plusone" data-annotation="inline" data-width="300"></div>
+					<script type="text/javascript">
+						(function () {
+							var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+							po.src = 'https://apis.google.com/js/platform.js';
+							var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+						})();
+					</script>
+					<br/>
+					<!-- The following is used for the Facebook Like button -->
+					<div class="fb-like" data-href="http://example.com/" data-layout="button_count" data-action="like" style="margin-bottom:2px" data-show-faces="false" data-share="false"></div>
+					<script>
+						(function (d, s, id) {
+							var js, fjs = d.getElementsByTagName(s)[0];
+							if (d.getElementById(id)) return;
+							js = d.createElement(s); js.id = id;
+							js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=642096532556211&version=v2.0";
+							fjs.parentNode.insertBefore(js, fjs);
+						}(document, 'script', 'facebook-jssdk'));
+					</script>
+					<div id="fb-root"></div>
+					<br/>
+					<div class="body-section">
+						<p class="body" ng-bind-html="post.message" style="margin:0;"></p>
+					</div>
+				</div>
+				<br/>
+				<div class="comments" ng-show="comments.length > 0">
+					<div ng-style="boxColor" style="margin:0">
+						<h1 class="comments-title">{{comments.length}} comments</h1>
+					</div>
+					<div id="commentItem{{$index}}" class="col-sm-12 hidden-xs" ng-repeat="comment in comments">
+						<comment-item author="{{comment.author}}" body="{{comment.body}}" date="{{comment.date}}"></comment-item>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="postComments" ng-show="authenticated">
+					<div ng-style="boxColor" style="margin:0">
+						<h1 class="postCommentsTitle">Join the conversation</h1>
+					</div>
+					<form name="container.commentForm" role="form" novalidate>
+						<div class="form-group">
+							<div text-angular="text-angular" name="htmlcontent" ng-minlength="1" ng-model="comment.body"></div>
+						</div>
+						<div class="form-group">
+							<button ng-disabled="isProcessing" ng-show="!isProcessing" ng-click="createComment(comment)" class="btn btn-primary">Participate!</button>
+							<button ng-disabled="!isProcessing" ng-show="isProcessing" class="btn btn-primary"><i class="fa fa-spin fa-spinner fa-fw"></i>Updating...</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col-lg-4 hidden-md hidden-sm hidden-xs" style="border-left:1px solid #BBB">
+				<div class="row" style="margin-left:0">
+					<h2 class="section-title">More posts by this Author</h2>
+					<a class="btn btn-info" style="width:100%;margin:2px;margin-bottom:10px;" ui-sref="root.home({id: null})">See posts by anyone</a>
+					<div id="allPosts{{$index}}" ng-repeat="otherPost in otherPosts | limitTo: 5">
+						<a class="btn btn-default" ui-sref="root.viewPost({id:otherPost.id})" style="width:100%;margin:2px;">{{otherPost.title}} - {{otherPost.date | date: 'mediumDate'}}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

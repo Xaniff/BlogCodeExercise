@@ -44,6 +44,11 @@ namespace Exercise2
 				defaults: new {controller = "Home", action = "Index"});
 
 			routes.MapRoute(
+				name: "RssPosts",
+				url: "rss/posts",
+				defaults: new {controller = "Rss", action = "Posts"});
+
+			routes.MapRoute(
 				name: "NotFound",
 				url: "{*url}",
 				defaults: new {controller = "Home", action = "Index", id = ""});

@@ -17,7 +17,7 @@ namespace UserRepoAndUOW.Actions
 		/// <param name="username">The username of the profile to check.</param>
 		/// <param name="password">The password of the profile to check.</param>
 		/// <returns>True: The user has a valid profile. False: The user is either non-existent or deleted.</returns>
-		public bool ValidateEmailAddressAndPassword(string username, string password)
+		public bool ValidateUsernameAndPassword(string username, string password)
 		{
 			//First, we need to retrieve the salt value associated with the user
 			var saltValue = GetUserSaltValue(username);

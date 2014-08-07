@@ -65,6 +65,6 @@ C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\UserBoundedCon
 C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\BlogBoundedContext.pdb
 C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\DataLayerMappings.pdb
 C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\Microsoft.AspNet.SignalR.Core.dll
-C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Whit\Desktop\hurread2\Exercise2\Exercise.Tests\bin\Debug\Newtonsoft.Json.xml

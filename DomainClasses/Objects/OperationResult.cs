@@ -19,7 +19,7 @@ namespace DomainClasses.Objects
 		/// <param name="result">The <see cref="OperationEnum">result enumerator</see> of the operation.</param>
 		public OperationResult(OperationEnum result)
 		{
-			
+			Result = result;
 		}
 
 		/// <summary>

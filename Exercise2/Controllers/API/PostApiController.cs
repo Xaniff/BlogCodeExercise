@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
+using BlogRepoAndUOW;
 using BlogRepoAndUOW.Actions;
 using DomainClasses.Entities;
 using Microsoft.AspNet.SignalR;
@@ -29,6 +31,10 @@ namespace Exercise2.Controllers.API
 			//Limit the body length of each of the posts to 500 characters
 			foreach (var post in posts)
 			{
+				//Strip the HTML tags from the body
+				var regex = new Regex("<.*?>", RegexOptions.Compiled);
+				post.Message = regex.Replace(post.Message, string.Empty);
+
 				post.Message = StringUtils.RetrieveMaxCharactersButKeepWholeWords(post.Message, 500);
 			}
 
@@ -41,7 +47,8 @@ namespace Exercise2.Controllers.API
 					Title = "",
 					Body = "",
 					Date = "",
-					Author = ""
+					Author = "",
+					Comments = ""
 				}
 			}.ToList();
 			list.Clear();
@@ -53,7 +60,8 @@ namespace Exercise2.Controllers.API
 					Title = post.Title,
 					Body = post.Message,
 					Date = post.CreatedOn.ToString("O"),
-					Author = post.Author.Username
+					Author = post.Author.Username,
+					Comments = post.Comments.Count.ToString(CultureInfo.InvariantCulture)
 				});
 			}
 
@@ -76,6 +84,10 @@ namespace Exercise2.Controllers.API
 			//Limit the body length of each of the posts to 500 characters
 			foreach (var post in posts)
 			{
+				//Strip the HTML tags from the body
+				var regex = new Regex("<.*?>", RegexOptions.Compiled);
+				post.Message = regex.Replace(post.Message, string.Empty);
+
 				post.Message = StringUtils.RetrieveMaxCharactersButKeepWholeWords(post.Message, 500);
 			}
 
@@ -88,7 +100,8 @@ namespace Exercise2.Controllers.API
 					Title = "",
 					Body = "",
 					Date = "",
-					Author = ""
+					Author = "",
+					Comments = ""
 				}
 			}.ToList();
 			list.Clear();
@@ -100,7 +113,8 @@ namespace Exercise2.Controllers.API
 					Title = post.Title,
 					Body = post.Message,
 					Date = post.CreatedOn.ToString("O"),
-					Author = post.Author.Username
+					Author = post.Author.Username,
+					Comments = post.Comments.Count.ToString(CultureInfo.InvariantCulture)
 				});
 			}
 
@@ -119,12 +133,8 @@ namespace Exercise2.Controllers.API
 
 			//Retrieve the post from the data store
 			var post = postAction.GetPostById(postId);
-
-			//Strip the HTML tags from the body
-			//var regex = new Regex("<.*?>", RegexOptions.Compiled);
-			//post.Message = regex.Replace(post.Message, string.Empty);
-
-			return Request.CreateResponse(HttpStatusCode.OK, new {id = post.Id.ToString(CultureInfo.InvariantCulture), title = post.Title, message = post.Message, date = post.CreatedOn.ToString("O"), author = post.Author.Username, authorId = post.Author.Id});
+			
+			return Request.CreateResponse(HttpStatusCode.OK, new {id = post.Id.ToString(CultureInfo.InvariantCulture), title = post.Title, message = post.Message, date = post.CreatedOn.ToString("O"), author = post.Author.Username, authorId = post.Author.Id, comments = post.Comments.Count.ToString(CultureInfo.InvariantCulture)});
 		}
 
 		/// <summary>
@@ -193,7 +203,8 @@ namespace Exercise2.Controllers.API
 					Title = "",
 					Body = "",
 					Date = "",
-					Author = ""
+					Author = "",
+					Comments = ""
 				}
 			}.ToList();
 			list.Clear();
@@ -205,7 +216,45 @@ namespace Exercise2.Controllers.API
 					Title = post.Title,
 					Body = post.Message,
 					Date = post.CreatedOn.ToString("O"),
-					Author = post.Author.Username
+					Author = post.Author.Username,
+					Comments = post.Comments.Count.ToString(CultureInfo.InvariantCulture)
+				});
+			}
+
+			return Request.CreateResponse(HttpStatusCode.OK, list);
+		}
+
+		/// <summary>
+		/// Retrieves all the comments for a given blog post.
+		/// </summary>
+		/// <param name="blogPostId">Id of the blog post the comments are associated with.</param>
+		/// <returns></returns>
+		[HttpGet]
+		public HttpResponseMessage GetCommentsForPost(int blogPostId)
+		{
+			var commentAction = new CommentAction(new CommentProcessorAction());
+
+			//Retrieve the comments
+			var comments = commentAction.GetCommentsForPost(blogPostId);
+			
+			//Create a new anonymous list for storing all the data
+			var list = new[]
+			{
+				new
+				{
+					Author = "",
+					Body = "",
+					Date = ""
+				}
+			}.ToList();
+			list.Clear();
+			foreach (var comment in comments)
+			{
+				list.Add(new
+				{
+					Author = comment.Author.Username,
+					Body = comment.Body,
+					Date = comment.CreatedOn.ToString("O")
 				});
 			}
 
@@ -227,6 +276,11 @@ namespace Exercise2.Controllers.API
 			//Limit the body length of each of the comments to 100 characters
 			foreach (var comment in comments)
 			{
+				//Strip the HTML tags from the body
+				var regex = new Regex("<.*?>", RegexOptions.Compiled);
+				comment.Body = regex.Replace(comment.Body, string.Empty);
+
+				//Limit the max length of the body now
 				comment.Body = StringUtils.RetrieveMaxCharactersButKeepWholeWords(comment.Body);
 			}
 
@@ -235,8 +289,11 @@ namespace Exercise2.Controllers.API
 			{
 				new
 				{
+					PostId = "",
+					PostTitle = "",
 					Body = "",
-					Author = "",
+					AuthorName = "",
+					AuthorId = "",
 					Date = ""
 				}
 			}.ToList();
@@ -245,8 +302,11 @@ namespace Exercise2.Controllers.API
 			{
 				list.Add(new
 				{
+					PostId = comment.Post.Id.ToString(CultureInfo.InvariantCulture),
+					PostTitle = comment.Post.Title,
 					Body = comment.Body,
-					Author = comment.Author.Username,
+					AuthorName = comment.Author.Username,
+					AuthorId = comment.Author.Id.ToString(CultureInfo.InvariantCulture),
 					Date = comment.CreatedOn.ToString("O")
 				});
 			}
@@ -280,8 +340,7 @@ namespace Exercise2.Controllers.API
 			postAction.DeletePost(postId, username);
 
 			//Send the message to the clients to update their posts
-			var hub = GlobalHost.ConnectionManager.GetHubContext<UpdateHub>();
-			hub.Clients.All.updatePosts();
+			SignalRHub.NotifyCreateOrDeletePost();
 
 			return Request.CreateResponse(HttpStatusCode.OK);
 		}
@@ -313,11 +372,42 @@ namespace Exercise2.Controllers.API
 			if (postId == -1)
 				return Request.CreateResponse(HttpStatusCode.NotAcceptable);
 
-			//Send the message to the clients to update their posts
-			var hub = GlobalHost.ConnectionManager.GetHubContext<UpdateHub>();
-			hub.Clients.All.updatePosts();
+			//Send the message to the clients to update their posts since a new one was created
+			SignalRHub.NotifyCreateOrDeletePost();
 
 			return Request.CreateResponse(HttpStatusCode.OK, new {postId = postId});
+		}
+
+		/// <summary>
+		/// Allows an authenticated user to create a comment.
+		/// </summary>
+		/// <param name="blogPostId">The blog post the comment is associated with.</param>
+		/// <param name="comment">The comment being created.</param>
+		/// <returns></returns>
+		[HttpGet]
+		public HttpResponseMessage CreateComment(int blogPostId, string comment)
+		{
+			var tokenAction = new TokenAction(new TokenProcessorAction());
+
+			//Validate the header token
+			var authResult = tokenAction.ValidateToken(HttpContext.Current);
+			if (authResult != HttpStatusCode.OK)
+				return Request.CreateResponse(authResult);
+
+			//Extract the user
+			var identity = tokenAction.ExtractCustomCookiePrincipal(HttpContext.Current);
+			if (identity == null)
+				return Request.CreateResponse(HttpStatusCode.InternalServerError);
+			var username = identity.Username;
+
+			//Create the comment
+			var commentAction = new CommentAction(new CommentProcessorAction());
+			commentAction.CreateComment(blogPostId, username, comment);
+
+			//Send a message to the clients to update their comments
+			SignalRHub.NotifyAddComments(blogPostId);
+
+			return Request.CreateResponse(HttpStatusCode.OK);
 		}
 
 		/// <summary>
@@ -346,10 +436,9 @@ namespace Exercise2.Controllers.API
 			if (postId == -1)
 				return Request.CreateResponse(HttpStatusCode.NotAcceptable);
 
-			//Send the message to the clients to update their posts
-			var hub = GlobalHost.ConnectionManager.GetHubContext<UpdateHub>();
-			hub.Clients.All.updatePosts();
-
+			//Send the message to the clients to update their posts since one was edited
+			SignalRHub.NotifyUpdatePosts(postId);
+			
 			return Request.CreateResponse(HttpStatusCode.OK, new {postId = postId});
 		}
 	}

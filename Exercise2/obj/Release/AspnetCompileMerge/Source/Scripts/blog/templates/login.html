@@ -1,0 +1,56 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:50px">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ui-sref="root.home">
+				My Blog Platform
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="nav-link">
+					<a ui-sref="root.home">Go back home</a>
+				</li>
+				<li class="nav-link visible-xs hidden-sm hidden-md hidden-lg" ng-show="!authenticated">
+					<a ui-sref="root.register">Register</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="wrapper">
+	<div class="row">
+		<div class="container">
+			<div class="col-xs-12">
+				<form name="container.loginForm" class="text-center" role="form" novalidate>
+					<fieldset>
+						<div class="form-group">
+							<label for="username" class="pull-left">Username:</label>
+							<input id="username" name="username" class="form-control" type="text" ng-model="user.username" placeholder="username" ng-disabled="isProcessingLogin" required />
+							<div ng-show="container.loginForm.username.$dirty && container.loginForm.username.$invalid">
+								<span class="text-warning" ng-show="container.loginForm.$error.required">Required</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password" class="pull-left">Password:</label>
+							<input id="password" name="password" class="form-control" type="password" ng-model="user.password" placeholder="password" required/>
+							<div ng-show="container.loginForm.password.$dirty && container.loginForm.password.$invalid">
+								<span class="text-warning" ng-show="container.loginForm.$error.required">Required</span>
+							</div>
+							<span class="text-danger" style="float:left" ng-show="errors.length > 0 && !isProcessingLogin">{{errors}}</span>
+						</div>
+						<div class="form-group">
+							<button ng-disabled="isProcessingLogin" ng-show="!isProcessingLogin" ng-click="loginClick(user)" class="btn btn-warning btn-xs navbar-btn">Sign In</button>
+							<button ng-disabled="isProcessingLogin" ng-show="isProcessingLogin" class="btn btn-warning btn-xs navbar-btn"><i class="fa fa-spinner fa-spin fa-fw"></i>Signing in...</button>
+							<span class="text-warning" ng-show="loginError.length > 0" ng-bind="loginError"></span>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

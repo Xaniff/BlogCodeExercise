@@ -10,13 +10,13 @@ namespace UserRepoAndUOW.Actions
 	public interface ILoginProcessorAction
 	{
 		/// <summary>
-		/// Validates whether a given email address and password yield a valid login 
+		/// Validates whether a given username and password yield a valid login 
 		/// action or not.
 		/// </summary>
-		/// <param name="username">Email address of the <see cref="UserProfile">UserProfile</see>to check.</param>
+		/// <param name="username">Username of the <see cref="UserProfile">UserProfile</see>to check.</param>
 		/// <param name="password">Password of the <see cref="UserProfile">UserProfile</see> to check.</param>
 		/// <returns></returns>
-		bool ValidateEmailAddressAndPassword(string username, string password);
+		bool ValidateUsernameAndPassword(string username, string password);
 
 		/// <summary>
 		/// Validates that a given username exists in the data store.

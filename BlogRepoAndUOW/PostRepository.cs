@@ -43,7 +43,7 @@ namespace BlogRepoAndUOW
 			return newRecord.Id;
 		}
 
-		public int AddComment(Comment newRecord)
+		public int Add(Comment newRecord)
 		{
 			newRecord.CreatedOn = DateTime.Now;
 			_context.SetAdd(newRecord);
@@ -88,20 +88,26 @@ namespace BlogRepoAndUOW
 		public void Remove(BlogPost record)
 		{
 			//Look up the specified record
-			var entity = _context.BlogPosts.Find(record.Id);
+			var entity = Find(record.Id);
+			
+			//If this is null, there's nothing to do here
+			if (entity == null)
+				return;
 
-			if (entity == null) return;
+			//Look up the comments associated with the record
+			var comments = GrabComments(a => a.Post.Id == record.Id).ToList();
+			if (comments.Count > 0)
+			{
+				foreach (var comment in comments)
+				{
+					_context.SetRemove(comment);
+				}
+				Save();
+			}
+			
+			//Finally, remove the blog post entity
 			_context.SetRemove(entity);
-			Save();
-		}
 
-		public void RemoveComment(Comment record)
-		{
-			//Look up the specified record
-			var entity = _context.Comments.Find(record.Id);
-
-			if (entity == null) return;
-			_context.SetRemove(entity);
 			Save();
 		}
 
@@ -110,9 +116,10 @@ namespace BlogRepoAndUOW
 			return _context.BlogPosts.Where(predicate).OrderByDescending(a => a.CreatedOn).Include(a => a.Author);
 		}
 
-		public IQueryable<Comment> GrabComment(Expression<Func<Comment, bool>> predicate)
+		public IQueryable<Comment> GrabComments(Expression<Func<Comment, bool>> predicate)
 		{
-			return _context.Comments.Where(predicate).OrderByDescending(a => a.CreatedOn).Include(a => a.Author);
+			return
+				_context.Comments.Where(predicate).OrderBy(a => a.CreatedOn).Include(a => a.Author).Include(a => a.Post);
 		}
 
 		public IQueryable<UserProfile> GrabUserProfile(Expression<Func<UserProfile, bool>> predicate)
@@ -122,7 +129,7 @@ namespace BlogRepoAndUOW
 
 		public IQueryable<BlogPost> GrabAll()
 		{
-			return _context.BlogPosts.Include(a => a.Author).AsQueryable();
+			return _context.BlogPosts.Include(a => a.Author).Include(a => a.Comments).AsQueryable();
 		}
 
 		public IQueryable<UserProfile> GrabAllProfiles()
@@ -137,7 +144,7 @@ namespace BlogRepoAndUOW
 
 		public IQueryable<Comment> GrabAllComments()
 		{
-			return _context.Comments.AsQueryable();
+			return _context.Comments.Include(a => a.Author).Include(a => a.Post).AsQueryable();
 		}
 
 		public void Save()

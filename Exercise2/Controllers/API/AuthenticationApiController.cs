@@ -7,6 +7,7 @@ using System.Web.Http.ModelBinding;
 using DomainClasses.Enums;
 using DomainClasses.Objects;
 using JWT;
+using Microsoft.AspNet.SignalR.Hubs;
 using UserRepoAndUOW.Actions;
 
 namespace Exercise2.Controllers.API
@@ -30,6 +31,9 @@ namespace Exercise2.Controllers.API
 				return Request.CreateResponse(HttpStatusCode.NotAcceptable, new { error= validationResult.ErrorMessage});
 			}
 
+			//Create the user profile
+			action.RegisterUser(registrationModel);
+
 			//The user has been successfully created. Let's populate the details we need for the JWT object
 			var cookie = new CustomCookiePrincipal { Username = registrationModel.Username };
 
@@ -43,11 +47,10 @@ namespace Exercise2.Controllers.API
 			//Retrieve the secret from the web.config file we'll use to encrypt this cookie
 			var secret = ConfigurationManager.AppSettings["JwtTokenSecret"];
 
+			SignalRHub.NotifyAddAuthor();
+
 			//Encode the JsonWebToken
 			var token = JsonWebToken.Encode(cookie, secret, JwtHashAlgorithm.HS512);
-
-			//Create the user profile
-			action.RegisterUser(registrationModel);
 			return Request.CreateResponse(HttpStatusCode.OK, new {token = token, username = registrationModel.Username});
 		}
 

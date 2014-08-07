@@ -1,0 +1,16 @@
+﻿<div style="height: 130px;">
+	<div class="blogItem fadeIn" ng-style="style">
+		<div class="smallItem">
+			<div class="text">
+				<a ui-sref="root.viewPost({id: id})"><h2 class="title" ng-bind="title"></h2></a>
+				<span>
+					<i class="fa fa-pencil fa-fw"></i>
+					<h6 class="author" ng-bind="author"></h6>
+					<i class="fa fa-clock-o fa-fw"></i>
+					<h6 class="date" ng-bind="(date | date:'mediumDate')"></h6>
+				</span>
+				<p class="body" ng-bind="body"></p>
+			</div>
+		</div>
+	</div>
+</div>
