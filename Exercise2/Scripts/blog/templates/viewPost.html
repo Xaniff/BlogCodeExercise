@@ -1,0 +1,61 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ui-sref="root.home">
+				My Blog Platform
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="nav-link" style="background-clor:#3B35A3">
+					<a ui-sref="root.home" style="color:#fff">Back to home</a>
+				</li>
+				<li class="nav-link" ng-show="authenticated" style="background-color:#25AD4E">
+					<a ui-sref="root.logout" style="color:#fff">Sign Out</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="wrapper">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-xs-12">
+				<div class="article">
+					<div ng-style="boxColor" style="margin:0">
+						<h1 class="article-title" ng-bind="post.title"></h1>
+					</div>
+					<span>
+						<i class="fa fa-pencil fa-fw"></i>
+						<h6 class="author" ng-bind="post.author"></h6>
+						<i class="fa fa-clock-o fa-fw"></i>
+						<h6 class="date" ng-bind="(post.date | date: 'mediumDate')"></h6>
+					</span>
+					<br/>
+					<span ng-show="post.author == username">
+						<button ng-click="editPost(postId)" class="btn btn-warning">Edit Post</button>
+						<button ng-click="deletePost(postId)" class="btn btn-danger">Delete Post</button>
+					</span>
+					<br/>
+					<div class="body-section">
+						<p class="body pull-left" ng-bind-html="post.message" style="margin:0;"></p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 hidden-md hidden-sm hidden-xs" style="border-left:1px solid #BBB">
+				<div class="row" style="margin-left:0">
+					<h2 class="section-title">More posts by this Author</h2>
+					<a class="btn btn-info" style="width:100%;margin:2px;margin-bottom:10px;" ui-sref="root.home({id: null})">See posts by anyone</a>
+					<div id="allPosts{{$index}}" ng-repeat="otherPost in otherPosts | limitTo: 5">
+						<a class="btn btn-default" ui-sref="root.viewPost({id:otherPost.id})" style="width:100%;margin:2px;">{{otherPost.title}} - {{otherPost.date | date: 'mediumDate'}}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

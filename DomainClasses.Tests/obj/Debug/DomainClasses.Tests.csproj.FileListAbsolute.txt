@@ -1,0 +1,10 @@
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\DomainClasses.Tests.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\DomainClasses.Tests.pdb
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\obj\Debug\DomainClasses.Tests.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\obj\Debug\DomainClasses.Tests.pdb
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\DomainClasses.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\DomainClasses.pdb
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\obj\Debug\DomainClasses.Tests.csprojResolveAssemblyReference.cache
+C:\Users\Whit\Desktop\hurread2\Exercise2\DomainClasses.Tests\bin\Debug\DomainClasses.Tests.dll.config

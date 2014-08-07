@@ -1,0 +1,1 @@
+C:\Users\Whit\Desktop\hurread2\Exercise2\AuthenticationBoundedContext\obj\Debug\AuthenticationBoundedContext.csprojResolveAssemblyReference.cache
