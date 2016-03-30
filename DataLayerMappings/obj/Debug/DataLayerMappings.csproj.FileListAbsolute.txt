@@ -12,3 +12,17 @@ C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\bin\Debug\Newtonsoft.
 C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\obj\Debug\DataLayerMappings.csprojResolveAssemblyReference.cache
 C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\obj\Debug\DataLayerMappings.dll
 C:\Users\Whit\Desktop\hurread2\Exercise2\DataLayerMappings\obj\Debug\DataLayerMappings.pdb
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\DataLayerMappings.dll.config
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\DataLayerMappings.dll
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\DataLayerMappings.pdb
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\DomainClasses.dll
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\EntityFramework.dll
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\DomainClasses.pdb
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\EntityFramework.xml
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\obj\Debug\DataLayerMappings.csprojResolveAssemblyReference.cache
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\obj\Debug\DataLayerMappings.dll
+C:\Users\Whit\Source\Repos\BlogCodeExercise\DataLayerMappings\obj\Debug\DataLayerMappings.pdb

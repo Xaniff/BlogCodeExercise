@@ -15,7 +15,7 @@
 	$scope.updateHub.client.ReceiveNotifyUpdatePosts = function(postIdentification) {
 		console.log('Received notification that a comment was created for postId: ' + postIdentification);
 		//Retrieve the post information from the server again if the postIdentification matches the current postId
-		if (Number(postId) == Number(postIdentification)) {
+		if (Number(postId) === Number(postIdentification)) {
 			postRepositoryService.getPostById(postId).then(function(promise) {	
 				$scope.post = promise;
 			});
@@ -27,19 +27,11 @@
 		console.log('Received notification that a comment was created for postId: ' + postIdentification);
 
 		//Check if the comment was added for this post
-		if (Number(postIdentification) == Number(postId)) {
+		if (Number(postIdentification) === Number(postId)) {
 			//Re-retrieve the comments for this post
-			commentRepositoryService.getCommentsForPost(post.id).then(function(promise) {
+			commentRepositoryService.getCommentsForPost(post.id).then(function (promise) {
 				$scope.comments = promise;
 			});
-
-			//Only need to retrieve the comments if there are actually any to be found
-			if (post.comments > 0) {
-				commentRepositoryService.getCommentsForPost(post.id).then(function (promise) {
-					$scope.comments = promise;
-				});
-			}
-			$scope.$apply();
 		}
 	};
 

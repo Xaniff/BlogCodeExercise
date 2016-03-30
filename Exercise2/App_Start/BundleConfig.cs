@@ -14,6 +14,7 @@ namespace Exercise2
 				"~/Scripts/bootstrap.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/standard").Include(
+				"~/Scripts/lodash.js",
 				"~/Scripts/modernizr-*",
 				"~/Scripts/respond.js"));
 
